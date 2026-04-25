@@ -15,10 +15,9 @@ var e=`# 数据库与 ORM
 ### 代码模式: Sequelize Service 封装
 ## Spring Boot 实现
 ### @Entity / @Table 实体定义
-### @Id / @Column / @GeneratedValue
-### Spring Data JPA Repository 接口
-### @OneToMany / @ManyToOne 关联映射
-### JPQL / @Query 自定义查询
+### Spring Data JPA Repository
+### @Query 自定义查询
+### 事务管理 @Transactional
 ### 代码模式: Repository + Service 分层
 ## 知识迁移要点
 ### 相似点
