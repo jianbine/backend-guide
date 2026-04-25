@@ -28,7 +28,7 @@ mindmap: ./mindmaps/00-foreword.md
 本教程假设你具备以下基础：
 
 | 前置知识 | 要求程度 |
-|---------|---------|
+|---------|----------|
 | JavaScript / TypeScript | 熟练 |
 | Node.js 基础 | 熟练 |
 | Express / Koa 等框架 | 了解基本用法 |
@@ -42,12 +42,8 @@ mindmap: ./mindmaps/00-foreword.md
 
 本教程共分为 7 个章节，按照从易到难的顺序组织：
 
-\`\`\`
-前言 → 环境搭建 → 路由与请求处理 → 中间件与拦截器 → 数据库与 ORM → 认证与授权 → 部署与运维
-\`\`\`
-
 | 章节 | 内容 | 预计用时 |
-|------|------|---------|
+|------|------|----------|
 | 00 - 前言 | 教程介绍与学习路线 | 10 分钟 |
 | 01 - 环境搭建 | 开发环境配置与 Hello World | 30 分钟 |
 | 02 - 路由与请求处理 | RESTful API 与请求响应 | 45 分钟 |
@@ -60,32 +56,13 @@ mindmap: ./mindmaps/00-foreword.md
 
 ### 1. 代码对比驱动
 
-每个知识点都会同时给出 Node.js 和 Spring Boot 的实现代码，让你直观地看到两者的异同：
-
-\`\`\`javascript
-// Node.js / Express
-app.get('/api/users/:id', (req, res) => {
-  const id = req.params.id;
-  res.json({ id, name: 'Alice' });
-});
-\`\`\`
-
-\`\`\`java
-// Java / Spring Boot
-@GetMapping("/api/users/{id}")
-public ResponseEntity<User> getUser(@PathVariable String id) {
-    User user = new User(id, "Alice");
-    return ResponseEntity.ok(user);
-}
-\`\`\`
+每个知识点都会同时给出 Node.js 和 Spring Boot 的实现代码，让你直观地看到两者的异同。
 
 ### 2. 思维导图辅助理解
 
-每章配有思维导图，帮助你建立知识框架，快速把握核心概念之间的关系。思维导图文件位于各章节对应的 \`mindmaps/\` 目录下。
+每章配有思维导图，帮助你建立知识框架，快速把握核心概念之间的关系。
 
 ### 3. 知识迁移对照表
-
-通过精心设计的对照表，将 Node.js 生态中的概念一一映射到 Spring Boot 生态：
 
 | Node.js | Spring Boot |
 |---------|-------------|
@@ -102,17 +79,8 @@ public ResponseEntity<User> getUser(@PathVariable String id) {
 
 ## 环境要求
 
-在开始学习之前，请确保你的开发环境满足以下要求：
-
-### 硬件要求
-
-- 内存：至少 8 GB（推荐 16 GB）
-- 磁盘空间：至少 5 GB 可用空间
-
-### 软件要求
-
 | 工具 | 版本要求 | 用途 |
-|------|---------|------|
+|------|----------|------|
 | Node.js | >= 16.x | 运行 Node.js 示例 |
 | npm / pnpm | >= 7.x | Node.js 包管理 |
 | JDK | >= 17 | Java 开发环境 |
@@ -120,8 +88,6 @@ public ResponseEntity<User> getUser(@PathVariable String id) {
 | IDE | VS Code 或 IntelliJ IDEA | 代码编辑 |
 | Git | 最新版 | 版本控制 |
 | Docker（可选） | 最新版 | 容器化部署 |
-
-> **注意：** JDK 17 是 Spring Boot 3.x 的最低要求。如果你使用的是 Spring Boot 2.x，JDK 11 也可以。
 
 ## 如何使用本教程
 
@@ -132,7 +98,5 @@ public ResponseEntity<User> getUser(@PathVariable String id) {
 
 ## 小结
 
-本教程的核心理念是**知识迁移**——利用你已经掌握的 Node.js 后端知识，快速理解和掌握 Java Spring Boot。通过代码对比、概念对照和实战练习，你将发现从 Node.js 迁移到 Spring Boot 并没有想象中那么困难。
-
-准备好了吗？让我们从环境搭建开始吧！
+本教程的核心理念是**知识迁移**——利用你已经掌握的 Node.js 后端知识，快速理解和掌握 Java Spring Boot。准备好了吗？让我们从环境搭建开始吧！
 `;export{e as default};
