@@ -21,50 +21,118 @@ mindmap: ./mindmaps/00-foreword.md
 - 理解 Node.js 与 Java Spring Boot 在后端开发中的对应关系
 - 独立搭建 Spring Boot 项目并完成基本的 API 开发
 - 将现有的 Node.js 后端项目思路迁移到 Spring Boot
-- 具备阅读和参与 Java 后端项目的能力
+- 具备阅读和参与 Java 后端项目开发的信心
 
-## 适用人群
+## 适合人群
 
-- 有 1 年以上 Node.js/Express 开发经验的前端工程师
-- 熟悉 HTTP 协议、RESTful API 设计
-- 了解基本的数据库操作（SQL、ORM）
-- 想要学习 Java 后端但不想从零开始
+本教程假设你具备以下基础：
+
+| 前置知识 | 要求程度 |
+|---------|---------|
+| JavaScript / TypeScript | 熟练 |
+| Node.js 基础 | 熟练 |
+| Express / Koa 等框架 | 了解基本用法 |
+| HTTP 协议基础 | 了解请求方法、状态码、Header |
+| SQL 基础 | 了解基本 CRUD 操作 |
+| Java 语言 | 不要求，教程中会讲解必要的语法 |
+
+> **提示：** 如果你完全没有 Java 语言基础，建议先花 1-2 天了解 Java 的基本语法（变量、类、接口、泛型、异常处理），这会让后续章节的学习更加顺畅。
+
+## 学习路线
+
+本教程共分为 7 个章节，按照从易到难的顺序组织：
+
+\`\`\`
+前言 → 环境搭建 → 路由与请求处理 → 中间件与拦截器 → 数据库与 ORM → 认证与授权 → 部署与运维
+\`\`\`
+
+| 章节 | 内容 | 预计用时 |
+|------|------|---------|
+| 00 - 前言 | 教程介绍与学习路线 | 10 分钟 |
+| 01 - 环境搭建 | 开发环境配置与 Hello World | 30 分钟 |
+| 02 - 路由与请求处理 | RESTful API 与请求响应 | 45 分钟 |
+| 03 - 中间件与拦截器 | 请求处理链与横切关注点 | 40 分钟 |
+| 04 - 数据库与 ORM | 数据持久化与关联关系 | 60 分钟 |
+| 05 - 认证与授权 | JWT、Session 与权限控制 | 50 分钟 |
+| 06 - 部署与运维 | 打包、容器化与监控 | 40 分钟 |
+
+## 教程特色
+
+### 1. 代码对比驱动
+
+每个知识点都会同时给出 Node.js 和 Spring Boot 的实现代码，让你直观地看到两者的异同：
+
+\`\`\`javascript
+// Node.js / Express
+app.get('/api/users/:id', (req, res) => {
+  const id = req.params.id;
+  res.json({ id, name: 'Alice' });
+});
+\`\`\`
+
+\`\`\`java
+// Java / Spring Boot
+@GetMapping("/api/users/{id}")
+public ResponseEntity<User> getUser(@PathVariable String id) {
+    User user = new User(id, "Alice");
+    return ResponseEntity.ok(user);
+}
+\`\`\`
+
+### 2. 思维导图辅助理解
+
+每章配有思维导图，帮助你建立知识框架，快速把握核心概念之间的关系。思维导图文件位于各章节对应的 \`mindmaps/\` 目录下。
+
+### 3. 知识迁移对照表
+
+通过精心设计的对照表，将 Node.js 生态中的概念一一映射到 Spring Boot 生态：
+
+| Node.js | Spring Boot |
+|---------|-------------|
+| Express | Spring MVC |
+| middleware | Interceptor / Filter |
+| npm | Maven / Gradle |
+| Sequelize / Prisma | Spring Data JPA |
+| jsonwebtoken | Spring Security JWT |
+| PM2 | Docker / systemd |
+
+### 4. 实战导向
+
+所有代码示例都可以直接运行。每章都围绕一个统一的示例项目展开，让你在实践中理解概念。
+
+## 环境要求
+
+在开始学习之前，请确保你的开发环境满足以下要求：
+
+### 硬件要求
+
+- 内存：至少 8 GB（推荐 16 GB）
+- 磁盘空间：至少 5 GB 可用空间
+
+### 软件要求
+
+| 工具 | 版本要求 | 用途 |
+|------|---------|------|
+| Node.js | >= 16.x | 运行 Node.js 示例 |
+| npm / pnpm | >= 7.x | Node.js 包管理 |
+| JDK | >= 17 | Java 开发环境 |
+| Maven / Gradle | 最新稳定版 | Java 构建工具 |
+| IDE | VS Code 或 IntelliJ IDEA | 代码编辑 |
+| Git | 最新版 | 版本控制 |
+| Docker（可选） | 最新版 | 容器化部署 |
+
+> **注意：** JDK 17 是 Spring Boot 3.x 的最低要求。如果你使用的是 Spring Boot 2.x，JDK 11 也可以。
 
 ## 如何使用本教程
 
-1. **按顺序学习**：章节按照从易到难的顺序编排，建议按顺序阅读
-2. **动手实践**：每个章节都有代码示例，建议在本地运行
-3. **对比理解**：重点理解 Node.js 和 Spring Boot 的对应关系
-4. **参考查阅**：学完后可作为日常开发的参考手册
+1. **按顺序学习** — 章节之间有递进关系，建议按照编号顺序学习
+2. **动手实践** — 每个代码示例都请亲自运行一遍，不要只看不练
+3. **善用对照表** — 遇到不理解的 Java 概念时，先在对照表中找到对应的 Node.js 概念
+4. **参考思维导图** — 学完每章后，回顾思维导图，检查是否掌握了所有核心概念
 
-## 技术栈对比概览
+## 小结
 
-| 维度 | Node.js | Java Spring Boot |
-|------|---------|------------------|
-| 语言 | JavaScript/TypeScript | Java |
-| 运行时 | V8 引擎 | JVM |
-| 框架 | Express/Koa/NestJS | Spring Boot |
-| 类型系统 | TypeScript（可选） | Java（强类型）|
-| 包管理 | npm/yarn/pnpm | Maven/Gradle |
-| ORM | Sequelize/Prisma | Spring Data JPA |
-| 模板引擎 | EJS/Pug/Handlebars | Thymeleaf |
+本教程的核心理念是**知识迁移**——利用你已经掌握的 Node.js 后端知识，快速理解和掌握 Java Spring Boot。通过代码对比、概念对照和实战练习，你将发现从 Node.js 迁移到 Spring Boot 并没有想象中那么困难。
 
-## 学习路线图
-
-```mermaid
-graph LR
-    A[Node.js 基础] --> B[环境搭建]
-    B --> C[路由与请求处理]
-    C --> D[中间件与拦截器]
-    D --> E[数据库与 ORM]
-    E --> F[认证与授权]
-    F --> G[部署与运维]
-```
-
-> 💡 **提示**：如果你已经有一定的 Java 基础，可以直接跳到对应章节查漏补缺。
-
-## 开始学习
-
-准备好了吗？让我们从 [环境搭建](/chapter/01-environment) 开始吧！
-`
-export default{render(){return{}}};
+准备好了吗？让我们从环境搭建开始吧！
+`;export{e as default};
