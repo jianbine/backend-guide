@@ -33,12 +33,8 @@
           <span class="progress-text">{{ store.progress }}%</span>
         </div>
         <button class="theme-btn" @click="store.toggleTheme" :title="store.isDark ? '切换亮色' : '切换暗色'">
-          <svg v-if="store.isDark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-          </svg>
-          <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-          </svg>
+          <svg v-if="store.isDark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
+          <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
         </button>
       </div>
     </header>
@@ -64,19 +60,13 @@
         </nav>
         <div class="sidebar-footer">
           <div class="sidebar-progress">
-            <div class="sidebar-progress-bar">
-              <div class="sidebar-progress-fill" :style="{ width: store.progress + '%' }"></div>
-            </div>
+            <div class="sidebar-progress-bar"><div class="sidebar-progress-fill" :style="{ width: store.progress + '%' }"></div></div>
             <span class="sidebar-progress-text">{{ store.progress }}% 已完成</span>
           </div>
         </div>
       </aside>
       <main class="app-main">
-        <router-view v-slot="{ Component }">
-          <transition name="fade" mode="out-in">
-            <component :is="Component" />
-          </transition>
-        </router-view>
+        <router-view v-slot="{ Component }"><transition name="fade" mode="out-in"><component :is="Component" /></transition></router-view>
       </main>
     </div>
     <SearchModal :visible="searchVisible" @close="searchVisible = false" @open="searchVisible = true" />
@@ -102,12 +92,12 @@ const navItems = [
   { path: '/chapter/04-database', label: '数据库与 ORM', icon: '🗄️', chapter: '04' },
   { path: '/chapter/05-auth', label: '认证与授权', icon: '🔐', chapter: '05' },
   { path: '/chapter/06-deployment', label: '部署与运维', icon: '🚀', chapter: '06' },
+  { path: '/chapter/07-mq', label: '消息队列', icon: '📨', chapter: '07' },
+  { path: '/chapter/08-es', label: '搜索引擎', icon: '🔍', chapter: '08' },
+  { path: '/chapter/09-redis', label: '缓存与 Redis', icon: '⚡', chapter: '09' },
 ]
 
-const extItems = [
-  { label: '消息队列 (MQ)', icon: '📨' },
-  { label: '搜索引擎 (ES)', icon: '🔍' },
-]
+const extItems = []
 
 function isActive(path) {
   if (path === '/') return route.path === '/'
@@ -165,7 +155,5 @@ function focusSearch() {
   .app-main { margin-left: 0; padding: 1.5rem 1.5rem 3rem; }
   .header-center { display: none; }
 }
-@media (max-width: 767px) {
-  .app-main { padding: 1rem 1rem 3rem; }
-}
+@media (max-width: 767px) { .app-main { padding: 1rem 1rem 3rem; } }
 </style>
