@@ -69,6 +69,10 @@ const chapterList = [
   { num: '07', slug: 'mq', title: '消息队列' },
   { num: '08', slug: 'es', title: '搜索引擎' },
   { num: '09', slug: 'redis', title: '缓存与 Redis' },
+  { num: '10', slug: 'graphql', title: 'API 设计进阶 (GraphQL)' },
+  { num: '11', slug: 'advanced-api', title: '接口进阶实战' },
+  { num: '12', slug: 'microservice', title: '微服务基础' },
+  { num: '13', slug: 'testing', title: '测试与质量保障' },
 ]
 
 const currentIndex = computed(() => {
@@ -121,7 +125,7 @@ async function loadChapter() {
         fmMatch[1].split('\n').forEach(line => {
           const [key, ...valueParts] = line.split(':')
           if (key && valueParts.length) {
-            frontmatter[key.trim()] = valueParts.join(':').trim().replace(/^[\'"]|[\'"]$/g, '')
+            frontmatter[key.trim()] = valueParts.join(':').trim().replace(/^['"]|['"]$/g, '')
           }
         })
 
@@ -167,30 +171,175 @@ watch(() => route.path, loadChapter)
 </script>
 
 <style scoped>
-.chapter-page { max-width: 100%; }
-.chapter-loading { text-align: center; padding: 4rem; color: var(--color-text-muted); font-size: 1.1rem; }
-.chapter-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; font-size: 0.8125rem; }
-.chapter-number { padding: 0.25rem 0.75rem; background: var(--color-accent-light); color: var(--color-accent-dark); border-radius: 6px; font-weight: 600; font-size: 0.75rem; }
-.chapter-nav-link { color: var(--color-text-muted); cursor: pointer; transition: color 0.2s; }
-.chapter-nav-link:hover { color: var(--color-accent); }
-.chapter-title { font-size: 2.25rem; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 2rem; line-height: 1.2; color: var(--color-text-primary); }
-.chapter-body { font-size: 0.9375rem; line-height: 1.8; }
-.chapter-body :deep(h2) { font-size: 1.5rem; font-weight: 700; margin-top: 3rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--color-border); }
-.chapter-body :deep(h3) { font-size: 1.2rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; }
-.chapter-body :deep(p) { margin-bottom: 1rem; color: var(--color-text-secondary); }
-.chapter-body :deep(ul), .chapter-body :deep(ol) { margin: 1rem 0; padding-left: 1.5rem; color: var(--color-text-secondary); }
-.chapter-body :deep(li) { margin-bottom: 0.5rem; }
-.chapter-body :deep(blockquote) { margin: 1.5rem 0; padding: 1rem 1.25rem; border-left: 3px solid var(--color-accent); background: var(--color-accent-light); border-radius: 0 8px 8px 0; color: var(--color-text-secondary); font-size: 0.9rem; }
-.chapter-body :deep(pre) { margin: 1.5rem 0; }
-.chapter-body :deep(code:not(pre code)) { font-family: var(--font-mono); font-size: 0.85em; padding: 0.125rem 0.375rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 4px; color: var(--color-accent-dark); }
-.chapter-body :deep(table) { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.875rem; }
-.chapter-body :deep(th), .chapter-body :deep(td) { padding: 0.625rem 1rem; border: 1px solid var(--color-border); text-align: left; }
-.chapter-body :deep(th) { background: var(--color-bg-secondary); font-weight: 600; }
-.chapter-body :deep(strong) { color: var(--color-text-primary); font-weight: 600; }
-.chapter-footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--color-border); }
-.footer-nav { display: flex; justify-content: space-between; gap: 1rem; }
-.footer-nav-btn { padding: 0.75rem 1.25rem; border: 1px solid var(--color-border); border-radius: 10px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; }
-.footer-nav-btn:hover { border-color: var(--color-accent); color: var(--color-accent); background: var(--color-accent-light); }
-.footer-nav-btn.next { margin-left: auto; }
-.chapter-not-found { text-align: center; padding: 4rem; color: var(--color-text-muted); }
+.chapter-page {
+  max-width: 100%;
+}
+
+.chapter-loading {
+  text-align: center;
+  padding: 4rem;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+}
+
+.chapter-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.8125rem;
+}
+
+.chapter-number {
+  padding: 0.25rem 0.75rem;
+  background: var(--color-accent-light);
+  color: var(--color-accent-dark);
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.chapter-nav-link {
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.chapter-nav-link:hover {
+  color: var(--color-accent);
+}
+
+.chapter-title {
+  font-size: 2.25rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+.chapter-body {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+}
+
+.chapter-body :deep(h2) {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.chapter-body :deep(h3) {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.chapter-body :deep(p) {
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.chapter-body :deep(ul),
+.chapter-body :deep(ol) {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+  color: var(--color-text-secondary);
+}
+
+.chapter-body :deep(li) {
+  margin-bottom: 0.5rem;
+}
+
+.chapter-body :deep(blockquote) {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid var(--color-accent);
+  background: var(--color-accent-light);
+  border-radius: 0 8px 8px 0;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+.chapter-body :deep(pre) {
+  margin: 1.5rem 0;
+}
+
+.chapter-body :deep(code:not(pre code)) {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  padding: 0.125rem 0.375rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-accent-dark);
+}
+
+.chapter-body :deep(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+}
+
+.chapter-body :deep(th),
+.chapter-body :deep(td) {
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.chapter-body :deep(th) {
+  background: var(--color-bg-secondary);
+  font-weight: 600;
+}
+
+.chapter-body :deep(strong) {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+/* ===== Footer Nav ===== */
+.chapter-footer {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.footer-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.footer-nav-btn {
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.footer-nav-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: var(--color-accent-light);
+}
+
+.footer-nav-btn.next {
+  margin-left: auto;
+}
+
+.chapter-not-found {
+  text-align: center;
+  padding: 4rem;
+  color: var(--color-text-muted);
+}
 </style>
