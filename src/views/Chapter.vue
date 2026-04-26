@@ -73,7 +73,8 @@ const chapterList = [
 
 const currentIndex = computed(() => {
   if (!chapter.value) return -1
-  return chapterList.findIndex(c => c.num === String(chapter.value.chapter))
+  const ch = String(chapter.value.chapter).padStart(2, '0')
+  return chapterList.findIndex(c => c.num === ch)
 })
 
 const prevChapter = computed(() => {
@@ -113,13 +114,14 @@ async function loadChapter() {
       const raw = await modules[contentPath]()
       const content = typeof raw === 'string' ? raw : raw.default || ''
 
+      // Parse frontmatter
       const fmMatch = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
       if (fmMatch) {
         const frontmatter = {}
         fmMatch[1].split('\n').forEach(line => {
           const [key, ...valueParts] = line.split(':')
           if (key && valueParts.length) {
-            frontmatter[key.trim()] = valueParts.join(':').trim().replace(/^[\'\"]|[\'\"]$/g, '')
+            frontmatter[key.trim()] = valueParts.join(':').trim().replace(/^[\'"]|[\'"]$/g, '')
           }
         })
 
@@ -129,6 +131,7 @@ async function loadChapter() {
           mindmap: frontmatter.mindmap || '',
         }
 
+        // Load mindmap
         if (chapter.value.mindmap) {
           try {
             const mindmapModules = import.meta.glob('@/content/mindmaps/*.md', { query: '?raw', import: 'default' })
@@ -148,6 +151,7 @@ async function loadChapter() {
         chapter.value = { title: '未命名章节', chapter: '0' }
       }
 
+      // Mark as read
       store.markChapterRead(String(chapter.value.chapter))
     }
   } catch (err) {
