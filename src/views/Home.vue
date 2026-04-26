@@ -75,7 +75,6 @@
           :key="chapter.path"
           :to="chapter.path"
           class="chapter-card"
-          :class="{ 'is-read': store.isChapterRead(chapter.chapterId) }"
           :style="{ '--card-index': index, '--card-color': chapter.color }"
         >
           <div class="card-glow"></div>
@@ -84,11 +83,6 @@
               <span v-html="chapter.icon"></span>
             </div>
             <div class="card-number">0{{ index + 1 }}</div>
-            <div v-if="store.isChapterRead(chapter.chapterId)" class="card-check">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
           </div>
           <div class="card-body">
             <h3 class="card-title">{{ chapter.title }}</h3>
@@ -112,68 +106,12 @@
       </div>
     </section>
 
-    <!-- Progress Section -->
-    <section class="progress-section">
-      <div class="progress-card">
-        <div class="progress-header">
-          <div class="progress-info">
-            <h3 class="progress-title">学习进度</h3>
-            <p class="progress-subtitle">已阅读 {{ store.readChapters.size }} / 14 个章节</p>
-          </div>
-          <div class="progress-circle">
-            <svg width="80" height="80" viewBox="0 0 80 80">
-              <circle cx="40" cy="40" r="34" fill="none" stroke="var(--color-border)" stroke-width="6" />
-              <circle
-                cx="40" cy="40" r="34" fill="none"
-                stroke="var(--color-accent)" stroke-width="6"
-                stroke-dasharray="213.6"
-                :stroke-dashoffset="213.6 - (213.6 * store.progress / 100)"
-                stroke-linecap="round"
-                transform="rotate(-90 40 40)"
-                style="transition: stroke-dashoffset 0.8s ease"
-              />
-              <text x="40" y="40" text-anchor="middle" dominant-baseline="central"
-                :fill="'var(--color-accent)'"
-                font-size="18" font-weight="700">
-                {{ store.progress }}%
-              </text>
-            </svg>
-          </div>
-        </div>
-        <div class="progress-bar-container">
-          <div class="progress-bar">
-            <div
-              class="progress-bar-fill"
-              :style="{ width: store.progress + '%' }"
-            ></div>
-          </div>
-          <div class="progress-steps">
-            <div
-              v-for="(step, index) in progressSteps"
-              :key="index"
-              class="progress-step"
-              :class="{ completed: store.isChapterRead(step.id) }"
-            >
-              <div class="step-dot"></div>
-              <span class="step-label">{{ step.label }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="home-footer">
-      <p>前端进阶后端 -- 从 Node.js 到 Spring Boot 的知识迁移指南</p>
-    </footer>
   </div>
 </template>
 
 <script setup>
-import { useAppStore } from '@/stores'
 import MindMap from '@/components/MindMap.vue'
-
-const store = useAppStore()
 
 const overviewMindmap = `# 前端进阶后端学习路线
 ## 环境搭建
@@ -412,22 +350,6 @@ const chapters = [
   },
 ]
 
-const progressSteps = [
-  { id: '00', label: '前言' },
-  { id: '01', label: '环境' },
-  { id: '02', label: '路由' },
-  { id: '03', label: '中间件' },
-  { id: '04', label: '数据库' },
-  { id: '05', label: '认证' },
-  { id: '06', label: '部署' },
-  { id: '07', label: 'MQ' },
-  { id: '08', label: 'ES' },
-  { id: '09', label: 'Redis' },
-  { id: '10', label: 'GraphQL' },
-  { id: '11', label: '进阶' },
-  { id: '12', label: '微服务' },
-  { id: '13', label: '测试' },
-]
 </script>
 
 <style scoped>
@@ -631,10 +553,6 @@ const progressSteps = [
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
-.chapter-card.is-read {
-  border-color: var(--color-accent);
-}
-
 .card-glow {
   position: absolute;
   top: 0;
@@ -679,18 +597,6 @@ const progressSteps = [
   background: var(--color-bg-primary);
   padding: 0.125rem 0.5rem;
   border-radius: 6px;
-}
-
-.card-check {
-  margin-left: auto;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--color-accent-light);
-  color: var(--color-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .card-body {
@@ -765,114 +671,6 @@ const progressSteps = [
   transform: translateX(3px);
 }
 
-/* ===== Progress Section ===== */
-.progress-section {
-  margin-bottom: 2rem;
-}
-
-.progress-card {
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  padding: 2rem;
-}
-
-.progress-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-}
-
-.progress-title {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin-bottom: 0.25rem;
-}
-
-.progress-subtitle {
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
-  margin: 0;
-}
-
-.progress-circle {
-  flex-shrink: 0;
-}
-
-.progress-bar-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.progress-bar {
-  height: 6px;
-  background: var(--color-bg-primary);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-dark));
-  border-radius: 3px;
-  transition: width 0.8s ease;
-}
-
-.progress-steps {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.25rem;
-}
-
-.progress-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.375rem;
-  flex: 1;
-}
-
-.step-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--color-border);
-  transition: all 0.3s;
-}
-
-.progress-step.completed .step-dot {
-  background: var(--color-accent);
-  box-shadow: 0 0 0 3px var(--color-accent-light);
-}
-
-.step-label {
-  font-size: 0.6875rem;
-  color: var(--color-text-muted);
-  text-align: center;
-  white-space: nowrap;
-}
-
-.progress-step.completed .step-label {
-  color: var(--color-accent);
-  font-weight: 600;
-}
-
-/* ===== Footer ===== */
-.home-footer {
-  text-align: center;
-  padding: 2rem 0 1rem;
-  border-top: 1px solid var(--color-border);
-}
-
-.home-footer p {
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
-  margin: 0;
-}
-
 /* ===== Responsive ===== */
 @media (max-width: 1023px) {
   .chapters-grid {
@@ -919,16 +717,6 @@ const progressSteps = [
 
   .chapter-card {
     padding: 1.25rem;
-  }
-
-  .progress-steps {
-    overflow-x: auto;
-    justify-content: flex-start;
-    padding-bottom: 0.25rem;
-  }
-
-  .progress-step {
-    min-width: 48px;
   }
 }
 </style>
