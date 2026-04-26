@@ -40,12 +40,10 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useAppStore } from '@/stores'
 import MindMap from '@/components/MindMap.vue'
 import MarkdownIt from 'markdown-it'
 
 const route = useRoute()
-const store = useAppStore()
 
 const loading = ref(true)
 const chapter = ref(null)
@@ -155,8 +153,6 @@ async function loadChapter() {
         chapter.value = { title: '未命名章节', chapter: '0' }
       }
 
-      // Mark as read
-      store.markChapterRead(String(chapter.value.chapter))
     }
   } catch (err) {
     console.error('Failed to load chapter:', err)

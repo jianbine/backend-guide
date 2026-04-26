@@ -19,23 +19,6 @@ export const useAppStore = defineStore('app', () => {
     }
   }
 
-  // Progress
-  const readChapters = ref(new Set(JSON.parse(localStorage.getItem('readChapters') || '[]')))
-
-  const progress = computed(() => {
-    const total = 14 // 00-13
-    return Math.round((readChapters.value.size / total) * 100)
-  })
-
-  function markChapterRead(chapterId) {
-    readChapters.value.add(chapterId)
-    localStorage.setItem('readChapters', JSON.stringify([...readChapters.value]))
-  }
-
-  function isChapterRead(chapterId) {
-    return readChapters.value.has(chapterId)
-  }
-
   // Sidebar
   const sidebarOpen = ref(true)
 
@@ -47,10 +30,6 @@ export const useAppStore = defineStore('app', () => {
     isDark,
     toggleTheme,
     initTheme,
-    readChapters,
-    progress,
-    markChapterRead,
-    isChapterRead,
     sidebarOpen,
     toggleSidebar,
   }

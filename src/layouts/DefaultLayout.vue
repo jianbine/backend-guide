@@ -28,21 +28,6 @@
       </div>
 
       <div class="header-right">
-        <div class="progress-badge" :title="`学习进度: ${store.progress}%`">
-          <svg width="28" height="28" viewBox="0 0 36 36">
-            <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--color-border)" stroke-width="2.5" />
-            <circle
-              cx="18" cy="18" r="15.5" fill="none"
-              stroke="var(--color-accent)" stroke-width="2.5"
-              stroke-dasharray="97.4" :stroke-dashoffset="97.4 - (97.4 * store.progress / 100)"
-              stroke-linecap="round"
-              transform="rotate(-90 18 18)"
-              style="transition: stroke-dashoffset 0.5s ease"
-            />
-          </svg>
-          <span class="progress-text">{{ store.progress }}%</span>
-        </div>
-
         <button class="theme-btn" @click="store.toggleTheme" :title="store.isDark ? '切换亮色' : '切换暗色'">
           <svg v-if="store.isDark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="5" />
@@ -73,11 +58,10 @@
               :key="item.path"
               :to="item.path"
               class="nav-item"
-              :class="{ active: isActive(item.path), read: store.isChapterRead(item.chapter) }"
+              :class="{ active: isActive(item.path) }"
             >
               <span class="nav-icon">{{ item.icon }}</span>
               <span class="nav-label">{{ item.label }}</span>
-              <span v-if="store.isChapterRead(item.chapter)" class="nav-check">✓</span>
             </router-link>
           </div>
 
@@ -91,14 +75,6 @@
           </div>
         </nav>
 
-        <div class="sidebar-footer">
-          <div class="sidebar-progress">
-            <div class="sidebar-progress-bar">
-              <div class="sidebar-progress-fill" :style="{ width: store.progress + '%' }"></div>
-            </div>
-            <span class="sidebar-progress-text">{{ store.progress }}% 已完成</span>
-          </div>
-        </div>
       </aside>
 
       <!-- Main Content -->
@@ -258,21 +234,6 @@ function focusSearch() {
   gap: 0.75rem;
 }
 
-.progress-badge {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: default;
-}
-
-.progress-text {
-  position: absolute;
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: var(--color-accent);
-}
-
 .theme-btn {
   background: none;
   border: 1px solid var(--color-border);
@@ -362,12 +323,6 @@ function focusSearch() {
   font-weight: 600;
 }
 
-.nav-item.read .nav-check {
-  color: var(--color-accent);
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
 .nav-item.disabled {
   opacity: 0.45;
   cursor: not-allowed;
@@ -391,37 +346,6 @@ function focusSearch() {
   border-radius: 4px;
   color: var(--color-text-muted);
   font-weight: 500;
-}
-
-.sidebar-footer {
-  padding: 1rem 0.75rem;
-  border-top: 1px solid var(--color-border);
-}
-
-.sidebar-progress {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-}
-
-.sidebar-progress-bar {
-  height: 4px;
-  background: var(--color-bg-secondary);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.sidebar-progress-fill {
-  height: 100%;
-  background: var(--color-accent);
-  border-radius: 2px;
-  transition: width 0.5s ease;
-}
-
-.sidebar-progress-text {
-  font-size: 0.7rem;
-  color: var(--color-text-muted);
-  text-align: center;
 }
 
 /* ===== Main ===== */
