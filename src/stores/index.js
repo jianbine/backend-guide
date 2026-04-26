@@ -23,7 +23,7 @@ export const useAppStore = defineStore('app', () => {
   const readChapters = ref(new Set(JSON.parse(localStorage.getItem('readChapters') || '[]')))
 
   const progress = computed(() => {
-    const total = 7 // 00-06
+    const total = 10 // 00-09
     return Math.round((readChapters.value.size / total) * 100)
   })
 

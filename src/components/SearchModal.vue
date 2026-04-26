@@ -4,34 +4,13 @@
       <div v-if="visible" class="search-overlay" @click.self="close">
         <div class="search-modal">
           <div class="search-input-wrap">
-            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <input
-              ref="inputRef"
-              v-model="query"
-              class="search-input"
-              placeholder="搜索章节、关键词..."
-              @keydown.down.prevent="moveDown"
-              @keydown.up.prevent="moveUp"
-              @keydown.enter.prevent="selectCurrent"
-              @keydown.esc="close"
-            />
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+            <input ref="inputRef" v-model="query" class="search-input" placeholder="搜索章节、关键词..." @keydown.down.prevent="moveDown" @keydown.up.prevent="moveUp" @keydown.enter.prevent="selectCurrent" @keydown.esc="close" />
             <kbd class="search-esc">ESC</kbd>
           </div>
-
           <div v-if="query.trim()" class="search-results">
-            <div v-if="results.length === 0" class="search-empty">
-              <span>没有找到匹配的结果</span>
-            </div>
-            <div
-              v-for="(item, index) in results"
-              :key="item.id"
-              :class="['search-result-item', { active: index === activeIndex }]"
-              @click="goTo(item)"
-              @mouseenter="activeIndex = index"
-            >
+            <div v-if="results.length === 0" class="search-empty"><span>没有找到匹配的结果</span></div>
+            <div v-for="(item, index) in results" :key="item.id" :class="['search-result-item', { active: index === activeIndex }]" @click="goTo(item)" @mouseenter="activeIndex = index">
               <span class="result-icon">{{ item.icon }}</span>
               <div class="result-content">
                 <div class="result-title" v-html="highlight(/^\d+$/.test(item.num) ? item.num + ' ' + item.title : item.title)"></div>
@@ -39,15 +18,9 @@
               </div>
             </div>
           </div>
-
           <div v-else class="search-hint">
             <div class="hint-title">快速跳转</div>
-            <div
-              v-for="item in chapters"
-              :key="item.id"
-              class="search-result-item"
-              @click="goTo(item)"
-            >
+            <div v-for="item in chapters" :key="item.id" class="search-result-item" @click="goTo(item)">
               <span class="result-icon">{{ item.icon }}</span>
               <div class="result-content">
                 <div class="result-title">{{ /^\d+$/.test(item.num) ? item.num + ' ' + item.title : item.title }}</div>
@@ -64,9 +37,7 @@
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 
-const props = defineProps({
-  visible: { type: Boolean, default: false },
-})
+const props = defineProps({ visible: { type: Boolean, default: false } })
 const emit = defineEmits(['close'])
 
 const router = useRouter()
@@ -82,116 +53,36 @@ const chapters = [
   { id: '04-database', num: '04', title: '数据库与 ORM', desc: 'Sequelize/Prisma 与 Spring Data JPA/Hibernate 使用方式', icon: '🗄️', path: '/chapter/04-database' },
   { id: '05-auth', num: '05', title: '认证与授权', desc: 'JWT 与 Session 认证、Spring Security 核心概念', icon: '🔐', path: '/chapter/05-auth' },
   { id: '06-deployment', num: '06', title: '部署与运维', desc: '进程管理、反向代理、Docker 容器化部署', icon: '🚀', path: '/chapter/06-deployment' },
+  { id: '07-mq', num: '07', title: '消息队列', desc: 'RabbitMQ、Kafka、BullMQ 与 Spring AMQP/Kafka 对比', icon: '📨', path: '/chapter/07-mq' },
+  { id: '08-es', num: '08', title: '搜索引擎', desc: 'Elasticsearch 全文搜索、Spring Data Elasticsearch 实战', icon: '🔍', path: '/chapter/08-es' },
+  { id: '09-redis', num: '09', title: '缓存与 Redis', desc: 'Redis 数据结构、缓存策略、Spring Data Redis 与 @Cacheable', icon: '⚡', path: '/chapter/09-redis' },
 ]
 
 const results = computed(() => {
   const q = query.value.trim().toLowerCase()
   if (!q) return []
-  return chapters.filter(ch => {
-    const text = `${ch.title} ${ch.desc} ${ch.num}`.toLowerCase()
-    return text.includes(q)
-  })
+  return chapters.filter(ch => { const text = `${ch.title} ${ch.desc} ${ch.num}`.toLowerCase(); return text.includes(q) })
 })
 
-watch(() => props.visible, (val) => {
-  if (val) {
-    query.value = ''
-    activeIndex.value = 0
-    nextTick(() => inputRef.value?.focus())
-  }
-})
+watch(() => props.visible, (val) => { if (val) { query.value = ''; activeIndex.value = 0; nextTick(() => inputRef.value?.focus()) } })
+watch(results, () => { activeIndex.value = 0 })
 
-watch(results, () => {
-  activeIndex.value = 0
-})
+function moveDown() { if (results.value.length) { activeIndex.value = (activeIndex.value + 1) % results.value.length } }
+function moveUp() { if (results.value.length) { activeIndex.value = (activeIndex.value - 1 + results.value.length) % results.value.length } }
+function selectCurrent() { if (query.value.trim() && results.value.length) { goTo(results.value[activeIndex.value]) } else if (!query.value.trim()) { goTo(chapters[activeIndex.value]) } }
+function goTo(item) { close(); router.push(item.path) }
+function close() { emit('close') }
+function highlight(text) { if (!query.value.trim()) return text; const q = query.value.trim(); const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'); return text.replace(regex, '<mark>$1</mark>') }
 
-function moveDown() {
-  if (results.value.length) {
-    activeIndex.value = (activeIndex.value + 1) % results.value.length
-  }
-}
-
-function moveUp() {
-  if (results.value.length) {
-    activeIndex.value = (activeIndex.value - 1 + results.value.length) % results.value.length
-  }
-}
-
-function selectCurrent() {
-  if (query.value.trim() && results.value.length) {
-    goTo(results.value[activeIndex.value])
-  } else if (!query.value.trim()) {
-    goTo(chapters[activeIndex.value])
-  }
-}
-
-function goTo(item) {
-  close()
-  router.push(item.path)
-}
-
-function close() {
-  emit('close')
-}
-
-function highlight(text) {
-  if (!query.value.trim()) return text
-  const q = query.value.trim()
-  const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-  return text.replace(regex, '<mark>$1</mark>')
-}
-
-function onKeydown(e) {
-  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-    e.preventDefault()
-    if (props.visible) {
-      close()
-    } else {
-      emit('open')
-    }
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('keydown', onKeydown)
-})
-
-onBeforeUnmount(() => {
-  document.removeEventListener('keydown', onKeydown)
-})
+function onKeydown(e) { if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); if (props.visible) { close() } else { emit('open') } } }
+onMounted(() => { document.addEventListener('keydown', onKeydown) })
+onBeforeUnmount(() => { document.removeEventListener('keydown', onKeydown) })
 </script>
 
 <style>
-.search-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 15vh;
-  backdrop-filter: blur(4px);
-}
-.search-modal {
-  width: 560px;
-  max-width: 90vw;
-  max-height: 420px;
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.search-input-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
-  border-bottom: 1px solid var(--color-border);
-}
+.search-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.5); display: flex; align-items: flex-start; justify-content: center; padding-top: 15vh; backdrop-filter: blur(4px); }
+.search-modal { width: 560px; max-width: 90vw; max-height: 420px; background: var(--color-bg-primary); border: 1px solid var(--color-border); border-radius: 16px; box-shadow: 0 24px 48px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden; }
+.search-input-wrap { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1rem; border-bottom: 1px solid var(--color-border); }
 .search-icon { color: var(--color-text-muted); flex-shrink: 0; }
 .search-input { flex: 1; border: none; outline: none; background: transparent; font-size: 1rem; color: var(--color-text-primary); font-family: inherit; }
 .search-input::placeholder { color: var(--color-text-muted); }
